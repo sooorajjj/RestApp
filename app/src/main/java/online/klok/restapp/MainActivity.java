@@ -1,8 +1,8 @@
 package online.klok.restapp;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
         btnHit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new JSONTask().execute("http://jsonparsing.parseapp.com/jsonData/moviesDemoItem.txt");
+                new JSONTask().execute("http://jsonparsing.parseapp.com/jsonData/moviesDemoList.txt");
+//                where there is only 1 json_object in a jason_array
+//                new JSONTask().execute("http://jsonparsing.parseapp.com/jsonData/moviesDemoItem.txt");
             }
         });
     }
@@ -65,11 +67,18 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject parentObject = new JSONObject(finalJson);
                 JSONArray parentArray = parentObject.getJSONArray("movies");
 
-                JSONObject finalObject = parentArray.getJSONObject(0);
+                // finalBufferData stores all the data as string
+                StringBuffer finalBufferData = new StringBuffer();
+                // for loop so it fetch all the json_object in the json_array
+                for (int i = 0; i < parentArray.length(); i++) {
+                    JSONObject finalObject = parentArray.getJSONObject(i);
 
-                String movieName = finalObject.getString("movie");
-                int year = finalObject.getInt("year");
-                return movieName +" - "+ year;
+                    String movieName = finalObject.getString("movie");
+                    int year = finalObject.getInt("year");
+                    finalBufferData.append(movieName + " - " + year + "\n");
+                }
+
+                return finalBufferData.toString();
 
             }catch (MalformedURLException e) {
                 e.printStackTrace();
