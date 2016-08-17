@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,13 +61,23 @@ public class MainActivity extends AppCompatActivity {
                     buffer.append(line);
                 }
 
-                return buffer.toString();
+                String finalJson = buffer.toString();
+                JSONObject parentObject = new JSONObject(finalJson);
+                JSONArray parentArray = parentObject.getJSONArray("movies");
+
+                JSONObject finalObject = parentArray.getJSONObject(0);
+
+                String movieName = finalObject.getString("movie");
+                int year = finalObject.getInt("year");
+                return movieName +" - "+ year;
 
             }catch (MalformedURLException e) {
                 e.printStackTrace();
             }catch (IOException e) {
                 e.printStackTrace();
-            }finally {
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
                 if(connection !=null) {
                     connection.disconnect();
                 }
