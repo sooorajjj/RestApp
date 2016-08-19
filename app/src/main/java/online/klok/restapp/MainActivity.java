@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import online.klok.restapp.models.SubcategoryModel;
 import online.klok.restapp.models.UserModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 //                where there is only 1 json_object in a jason_array
 //                new JSONTask().execute("http://jsonparsing.parseapp.com/jsonData/moviesDemoItem.txt");
     }
+
     public class JSONTask extends AsyncTask<String, String, List<UserModel> >{
 
         @Override
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List<UserModel> result) {
             super.onPostExecute(result);
             dialog.dismiss();
-            UserAdapter adapter = new UserAdapter(getApplicationContext(), R.layout.row, result);
+            UserAdapter adapter = new UserAdapter(getApplicationContext(), R.layout.row_users, result);
             lvUsers.setAdapter(adapter);
 //            TODO need to set the data to the list
         }
@@ -185,6 +187,133 @@ public class MainActivity extends AppCompatActivity {
             private TextView tvUpdated_at;
         }
     }
+    public class JSONTask1 extends AsyncTask<String, String, List<SubcategoryModel> >{
+
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+            dialog.show();
+        }
+
+        @Override
+        protected List<SubcategoryModel> doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                InputStream stream = connection.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuffer buffer = new StringBuffer();
+
+                String line ="";
+                while ((line=reader.readLine()) !=null){
+                    buffer.append(line);
+                }
+
+                String finalJson = buffer.toString();
+//                JSONObject parentObject = new JSONObject(finalJson);
+//                JSONArray parentArray = parentObject.getJSONArray("movies");
+                JSONArray parentArray = new JSONArray(finalJson);
+
+                // finalBufferData stores all the data as string
+//                StringBuffer finalBufferData = new StringBuffer();
+                // for loop so it fetch all the json_object in the json_array
+
+                List<SubcategoryModel> subcategoryModelList = new ArrayList<>();
+
+                Gson gson = new Gson();
+                for (int i = 0; i < parentArray.length(); i++) {
+                    JSONObject finalObject = parentArray.getJSONObject(i);
+                    SubcategoryModel subcategoryModel = gson.fromJson(finalObject.toString(), SubcategoryModel.class);
+                    subcategoryModelList.add(subcategoryModel);
+                }
+                return subcategoryModelList;
+
+            }catch (MalformedURLException e) {
+                e.printStackTrace();
+            }catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                if(connection !=null) {
+                    connection.disconnect();
+                }
+                try {
+                    if (reader !=null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(List<SubcategoryModel> result) {
+            super.onPostExecute(result);
+            dialog.dismiss();
+            SubcategoryAdapter adapter = new SubcategoryAdapter(getApplicationContext(), R.layout.row_subcategory, result);
+            lvUsers.setAdapter(adapter);
+//            TODO need to set the data to the list
+        }
+    }
+    public class SubcategoryAdapter extends ArrayAdapter{
+
+        public List<SubcategoryModel> subcategoryModelList;
+        private int resource;
+        private LayoutInflater inflater;
+        public SubcategoryAdapter(Context context, int resource, List<SubcategoryModel> objects) {
+            super(context, resource, objects);
+            subcategoryModelList = objects;
+            this.resource = resource;
+            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder holder = null;
+
+            if(convertView == null){
+                holder = new ViewHolder();
+                convertView=inflater.inflate(resource, null);
+                holder.tvId = (TextView)convertView.findViewById(R.id.tvId);
+                holder.tvCategoryId = (TextView)convertView.findViewById(R.id.tvCategoryId);
+                holder.tvName = (TextView)convertView.findViewById(R.id.tvName);
+                holder.tvShortName = (TextView)convertView.findViewById(R.id.tvShortName);
+                holder.tvCreated_at = (TextView)convertView.findViewById(R.id.tvCreated_at);
+                holder.tvUpdated_at = (TextView)convertView.findViewById(R.id.tvUpdated_at);
+                convertView.setTag(holder);
+            }else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.tvId.setText("Id : " + subcategoryModelList.get(position).getId());
+            holder.tvCategoryId.setText("Category Id : " + subcategoryModelList.get(position).getCategoryId());
+            holder.tvName.setText("Name: "+ subcategoryModelList.get(position).getName());
+            holder.tvShortName.setText("Short Name: "+subcategoryModelList.get(position).getShortName());
+            holder.tvCreated_at.setText("Created On: "+ subcategoryModelList.get(position).getCreated_at());
+            holder.tvUpdated_at.setText("Updated On: "+subcategoryModelList.get(position).getUpdated_at());
+            return convertView;
+        }
+
+        class ViewHolder{
+            private TextView tvId;
+            private TextView tvCategoryId;
+            private TextView tvName;
+            private TextView tvShortName;
+            private TextView tvCreated_at;
+            private TextView tvUpdated_at;
+
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -201,8 +330,11 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
+        if (id == R.id.action_users) {
             new JSONTask().execute("http://146.185.178.83/rest");
+            return true;
+        }if (id == R.id.action_subcategories) {
+            new JSONTask1().execute("http://innovat.5gbfree.com/SubCategories");
             return true;
         }
 
