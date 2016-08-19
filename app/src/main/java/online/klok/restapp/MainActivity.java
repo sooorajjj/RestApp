@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,16 +89,17 @@ public class MainActivity extends AppCompatActivity {
                 // for loop so it fetch all the json_object in the json_array
 
                 List<UserModel> userModelList = new ArrayList<>();
-                for (int i = 0; i < parentArray.length(); i++) {
 
+                Gson gson = new Gson();
+                for (int i = 0; i < parentArray.length(); i++) {
                     JSONObject finalObject = parentArray.getJSONObject(i);
-                    UserModel userModel = new UserModel();
-                    userModel.setId(finalObject.getInt("id"));
-                    userModel.setName(finalObject.getString("name"));
-                    userModel.setUserId(finalObject.getString("userId"));
-                    userModel.setCreated_at(finalObject.getString("created_at"));
-                    userModel.setUpdated_at(finalObject.getString("updated_at"));
-                    // adding the final object in the list
+                    UserModel userModel =gson.fromJson(finalObject.toString(), UserModel.class);
+//                    UserModel userModel = new UserModel();
+//                    userModel.setId(finalObject.getInt("id"));
+//                    userModel.setName(finalObject.getString("name"));
+//                    userModel.setUserId(finalObject.getString("userId"));
+//                    userModel.setCreated_at(finalObject.getString("created_at"));
+//                    userModel.setUpdated_at(finalObject.getString("updated_at"));
                     userModelList.add(userModel);
                 }
 
