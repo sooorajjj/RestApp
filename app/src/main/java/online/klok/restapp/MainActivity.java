@@ -137,29 +137,38 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
+            ViewHolder holder = null;
+
             if(convertView == null){
+                holder = new ViewHolder();
                 convertView=inflater.inflate(resource, null);
+                holder.tvId = (TextView)convertView.findViewById(R.id.tvId);
+                holder.tvName = (TextView)convertView.findViewById(R.id.tvName);
+                holder.tvUserId = (TextView)convertView.findViewById(R.id.tvUserId);
+                holder.tvCreated_at = (TextView)convertView.findViewById(R.id.tvCreated_at);
+                holder.tvUpdated_at = (TextView)convertView.findViewById(R.id.tvUpdated_at);
+                convertView.setTag(holder);
+            }else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
-            TextView tvId;
-            TextView tvName;
-            TextView tvUserId;
-            TextView tvCreated_at;
-            TextView tvUpdated_at;
 
-            tvId = (TextView)convertView.findViewById(R.id.tvId);
-            tvName = (TextView)convertView.findViewById(R.id.tvName);
-            tvUserId = (TextView)convertView.findViewById(R.id.tvUserId);
-            tvCreated_at = (TextView)convertView.findViewById(R.id.tvCreated_at);
-            tvUpdated_at = (TextView)convertView.findViewById(R.id.tvUpdated_at);
 
-            tvId.setText("Id: " + userModelList.get(position).getId());
-            tvName.setText(userModelList.get(position).getName());
-            tvUserId.setText(userModelList.get(position).getUserId());
-            tvCreated_at.setText(userModelList.get(position).getCreated_at());
-            tvUpdated_at.setText(userModelList.get(position).getUpdated_at());
+            holder.tvId.setText("Id: " + userModelList.get(position).getId());
+            holder.tvName.setText("Name: " + userModelList.get(position).getName());
+            holder.tvUserId.setText("user_id: " + userModelList.get(position).getUserId());
+            holder.tvCreated_at.setText("Created_on: " + userModelList.get(position).getCreated_at());
+            holder.tvUpdated_at.setText("Updated_on: " + userModelList.get(position).getUpdated_at());
 
             return convertView;
+        }
+
+        class ViewHolder{
+            private TextView tvId;
+            private TextView tvName;
+            private TextView tvUserId;
+            private TextView tvCreated_at;
+            private TextView tvUpdated_at;
         }
     }
 
