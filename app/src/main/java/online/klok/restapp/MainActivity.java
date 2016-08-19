@@ -1,5 +1,6 @@
 package online.klok.restapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.awt.font.TextAttribute;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,11 +33,17 @@ import online.klok.restapp.models.UserModel;
 public class MainActivity extends AppCompatActivity {
 
     private ListView lvUsers;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dialog = new ProgressDialog(this);
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading, please wait.....");
 
         lvUsers = (ListView)findViewById(R.id.lvUsers);
 
@@ -46,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
     }
     public class JSONTask extends AsyncTask<String, String, List<UserModel> >{
 
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+            dialog.show();
+        }
         @Override
         protected List<UserModel> doInBackground(String... params) {
             HttpURLConnection connection = null;
@@ -115,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<UserModel> result) {
             super.onPostExecute(result);
-
+            dialog.dismiss();
             UserAdapter adapter = new UserAdapter(getApplicationContext(), R.layout.row, result);
             lvUsers.setAdapter(adapter);
 //            TODO need to set the data to the list
