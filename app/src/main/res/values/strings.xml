@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">RestApp</string>
     <string name="action_users">Users</string>
+    <string name="action_floor">Floor</string>
+    <string name="action_cardBalance">CardBalance</string>
+    <string name="action_cardDetails">CardDetails</string>
+    <string name="action_categories">Categories</string>
+    <string name="action_extras">Extras</string>
+    <string name="action_item">Item</string>
+    <string name="action_modifiers">Modifiers</string>
+    <string name="action_order">Order</string>
+    <string name="action_orderItemDetails">OrderItemDetails</string>
+    <string name="action_orderPlaces">OrderPlace</string>
     <string name="action_subcategories">Subcategories</string>
+    <string name="action_master">Master</string>
+    <string name="action_location">Location</string>
 
 </resources>
