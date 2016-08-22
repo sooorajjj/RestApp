@@ -1,13 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:visibility="visible"
     tools:context="online.klok.restapp.MainActivity">
 
-    <ListView
+    <Button
+        android:id="@+id/bUsers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lvUsers" />
-</LinearLayout>
+        android:text="Users" />
+
+    <Button
+        android:id="@+id/bFloor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bUsers"
+        android:text="Floor" />
+
+    <Button
+        android:id="@+id/bCardBalance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bFloor"
+        android:text="CardBalance" />
+
+    <Button
+        android:id="@+id/bCardDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bCardBalance"
+        android:text="Card Details" />
+
+    <Button
+        android:id="@+id/bCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bCardDetails"
+        android:text="Categories" />
+
+    <Button
+        android:id="@+id/bExtras"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bCategories"
+        android:text="Extras" />
+
+    <Button
+        android:id="@+id/bItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bExtras"
+        android:text="Items" />
+
+    <Button
+        android:id="@+id/bModifiers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bItems"
+        android:text="Modifiers" />
+
+    <Button
+        android:id="@+id/bOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bModifiers"
+        android:text="Order" />
+
+    <Button
+        android:id="@+id/bOrderItemDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bOrder"
+        android:text="Order Item Details" />
+
+    <Button
+        android:id="@+id/bOrderPlaces"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bOrderItemDetails"
+        android:text="Order Places" />
+
+    <Button
+        android:id="@+id/bSubCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bOrderPlaces"
+        android:text="Sub Categories" />
+
+    <Button
+        android:id="@+id/bMaster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bSubCategories"
+        android:text="Master" />
+
+    <Button
+        android:id="@+id/bLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bMaster"
+        android:text="Location" />
+
+</RelativeLayout>

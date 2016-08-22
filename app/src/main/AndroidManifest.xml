@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="online.klok.restapp">
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="online.klok.restapp">
 
-    <application android:allowBackup="true"
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -15,6 +17,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".customAdapters.User" />
+        <activity android:name=".customAdapters.CardBalance" />
+        <activity android:name=".customAdapters.CardDetails" />
+        <activity android:name=".customAdapters.Categories" />
+        <activity android:name=".customAdapters.Extras" />
+        <activity android:name=".customAdapters.Floor" />
+        <activity android:name=".customAdapters.Items" />
+        <activity android:name=".customAdapters.Modifiers" />
+        <activity android:name=".customAdapters.Order" />
+        <activity android:name=".customAdapters.OrderItemDetails" />
+        <activity android:name=".customAdapters.OrderPlaces" />
+        <activity android:name=".customAdapters.SubCategories" />
+        <activity android:name=".customAdapters.Master" />
+        <activity android:name=".customAdapters.Location" />
     </application>
 
 </manifest>
