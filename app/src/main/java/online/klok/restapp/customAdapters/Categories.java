@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,24 +158,22 @@ public class Categories extends AppCompatActivity implements AdapterView.OnItemS
 
     private void displayCategoriesInformation(CategoriesModel categoriesModel) {
 
-//        DecimalFormat df2 = new DecimalFormat("0.00##");
 
         //get references to your views
         TextView tvCategoryId = (TextView) findViewById(R.id.tvCategoryId);
 
-        String categoryId = categoriesModel.getCategoryId();
-        final int catId = Integer.parseInt(categoryId);
+        final int categoryId = categoriesModel.getId();
 
 
-        //set values from your country java object
-        tvCategoryId.setText(categoriesModel.getCategoryId());
+        //set values from your categoriesModel java object to textView
+        tvCategoryId.setText("Id :  " + categoriesModel.getId());
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent intent = new Intent(Categories.this, SubCategories.class);
-                intent.putExtra("parameter_name", catId);
+                intent.putExtra("parameter_name", categoryId);
                 startActivity(intent);
 
             }
