@@ -1,16 +1,11 @@
 package online.klok.restapp.customAdapters;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import com.google.gson.Gson;
 
@@ -33,20 +28,41 @@ import online.klok.restapp.models.UserModel;
 
 public class User extends AppCompatActivity {
 
-    private ListView lvUsers;
+    private Spinner spinnerFood;
     private ProgressDialog dialog;
+    private List<UserModel> userModelList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sub);
+        setContentView(R.layout.row_users);
         dialog = new ProgressDialog(this);
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
         dialog.setMessage("Loading, please wait.....");
 
-        lvUsers = (ListView)findViewById(R.id.lvUsers);
+//        lvUsers = (ListView)findViewById(R.id.lvUsers);
+        spinnerFood = (Spinner) findViewById(R.id.spinFood);
         new JSONTask().execute("http://146.185.178.83/resttest/User");
+    }
+
+    private void populateSpinner() {
+        List<String> lables = new ArrayList<String>();
+
+        for (int i = 0; i < userModelList.size(); i++) {
+            lables.add(userModelList.get(i).getName());
+        }
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, lables);
+
+        // Drop down layout style - list view with radio button
+        spinnerAdapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinnerFood.setAdapter(spinnerAdapter);
     }
 
     public class JSONTask extends AsyncTask<String, String, List<UserModel> > {
@@ -85,7 +101,7 @@ public class User extends AppCompatActivity {
 //                StringBuffer finalBufferData = new StringBuffer();
                 // for loop so it fetch all the json_object in the json_array
 
-                List<UserModel> userModelList = new ArrayList<>();
+//                List<UserModel> userModelList = new ArrayList<>();
 
                 Gson gson = new Gson();
                 for (int i = 0; i < parentArray.length(); i++) {
@@ -127,59 +143,61 @@ public class User extends AppCompatActivity {
         protected void onPostExecute(List<UserModel> result) {
             super.onPostExecute(result);
             dialog.dismiss();
-            UserAdapter adapter = new UserAdapter(getApplicationContext(), R.layout.row_users, result);
-            lvUsers.setAdapter(adapter);
+//            UserAdapter adapter = new UserAdapter(getApplicationContext(), R.layout.row_users, result);
+//            lvUsers.setAdapter(adapter);
+            populateSpinner();
+
 //            TODO need to set the data to the list
         }
     }
 
-    public class UserAdapter extends ArrayAdapter {
-
-        public List<UserModel> userModelList;
-        private int resource;
-        private LayoutInflater inflater;
-        public UserAdapter(Context context, int resource, List<UserModel> objects) {
-            super(context, resource, objects);
-            userModelList = objects;
-            this.resource = resource;
-            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-
-            if(convertView == null){
-                holder = new ViewHolder();
-                convertView=inflater.inflate(resource, null);
-                holder.tvId = (TextView)convertView.findViewById(R.id.tvId);
-                holder.tvName = (TextView)convertView.findViewById(R.id.tvName);
-                holder.tvUserId = (TextView)convertView.findViewById(R.id.tvUserId);
-                holder.tvCreated_at = (TextView)convertView.findViewById(R.id.tvCreated_at);
-                holder.tvUpdated_at = (TextView)convertView.findViewById(R.id.tvUpdated_at);
-                convertView.setTag(holder);
-            }else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-
-
-            holder.tvId.setText("Id: " + userModelList.get(position).getId());
-            holder.tvName.setText("Name: " + userModelList.get(position).getName());
-            holder.tvUserId.setText("user_id: " + userModelList.get(position).getUserId());
-            holder.tvCreated_at.setText("Created_on: " + userModelList.get(position).getCreated_at());
-            holder.tvUpdated_at.setText("Updated_on: " + userModelList.get(position).getUpdated_at());
-
-            return convertView;
-        }
-
-        class ViewHolder{
-            private TextView tvId;
-            private TextView tvName;
-            private TextView tvUserId;
-            private TextView tvCreated_at;
-            private TextView tvUpdated_at;
-        }
-    }
+//    public class UserAdapter extends ArrayAdapter {
+//
+//        public List<UserModel> userModelList;
+//        private int resource;
+//        private LayoutInflater inflater;
+//        public UserAdapter(Context context, int resource, List<UserModel> objects) {
+//            super(context, resource, objects);
+//            userModelList = objects;
+//            this.resource = resource;
+//            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//
+//            ViewHolder holder = null;
+//
+//            if(convertView == null){
+//                holder = new ViewHolder();
+//                convertView=inflater.inflate(resource, null);
+//                holder.tvId = (TextView)convertView.findViewById(R.id.tvId);
+//                holder.tvName = (TextView)convertView.findViewById(R.id.tvName);
+//                holder.tvUserId = (TextView)convertView.findViewById(R.id.tvUserId);
+//                holder.tvCreated_at = (TextView)convertView.findViewById(R.id.tvCreated_at);
+//                holder.tvUpdated_at = (TextView)convertView.findViewById(R.id.tvUpdated_at);
+//                convertView.setTag(holder);
+//            }else {
+//                holder = (ViewHolder) convertView.getTag();
+//            }
+//
+//
+//
+//            holder.tvId.setText("Id: " + userModelList.get(position).getId());
+//            holder.tvName.setText("Name: " + userModelList.get(position).getName());
+//            holder.tvUserId.setText("user_id: " + userModelList.get(position).getUserId());
+//            holder.tvCreated_at.setText("Created_on: " + userModelList.get(position).getCreated_at());
+//            holder.tvUpdated_at.setText("Updated_on: " + userModelList.get(position).getUpdated_at());
+//
+//            return convertView;
+//        }
+//
+//        class ViewHolder{
+//            private TextView tvId;
+//            private TextView tvName;
+//            private TextView tvUserId;
+//            private TextView tvCreated_at;
+//            private TextView tvUpdated_at;
+//        }
+//    }
 }

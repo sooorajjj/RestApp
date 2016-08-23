@@ -1,16 +1,11 @@
 package online.klok.restapp.customAdapters;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import com.google.gson.Gson;
 
@@ -36,20 +31,41 @@ import online.klok.restapp.models.FloorModel;
  */
 public class Floor extends AppCompatActivity {
 
-    private ListView lvUsers;
+    private Spinner spinnerFood;
     private ProgressDialog dialog;
+    private List<FloorModel> floorModelList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sub);
+        setContentView(R.layout.row_floor);
         dialog = new ProgressDialog(this);
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
         dialog.setMessage("Loading, please wait.....");
 
-        lvUsers = (ListView) findViewById(R.id.lvUsers);
+//        lvUsers = (ListView)findViewById(R.id.lvUsers);
+        spinnerFood = (Spinner) findViewById(R.id.spinFood);
         new JSONTask().execute("http://146.185.178.83/resttest/Floor");
+    }
+
+    private void populateSpinner() {
+        List<String> lables = new ArrayList<String>();
+
+        for (int i = 0; i < floorModelList.size(); i++) {
+            lables.add(floorModelList.get(i).getFloorName());
+        }
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, lables);
+
+        // Drop down layout style - list view with radio button
+        spinnerAdapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinnerFood.setAdapter(spinnerAdapter);
     }
 
     public class JSONTask extends AsyncTask<String, String, List<FloorModel>> {
@@ -90,7 +106,6 @@ public class Floor extends AppCompatActivity {
 //                StringBuffer finalBufferData = new StringBuffer();
                 // for loop so it fetch all the json_object in the json_array
 
-                List<FloorModel> floorModelList = new ArrayList<>();
 
                 Gson gson = new Gson();
                 for (int i = 0; i < parentArray.length(); i++) {
@@ -125,58 +140,60 @@ public class Floor extends AppCompatActivity {
         protected void onPostExecute(List<FloorModel> result) {
             super.onPostExecute(result);
             dialog.dismiss();
-            FloorAdapter adapter = new FloorAdapter(getApplicationContext(), R.layout.row_floor, result);
-            lvUsers.setAdapter(adapter);
+//            FloorAdapter adapter = new FloorAdapter(getApplicationContext(), R.layout.row_floor, result);
+//            lvUsers.setAdapter(adapter);
+            populateSpinner();
+
 //            TODO need to set the data to the list
         }
     }
 
-    public class FloorAdapter extends ArrayAdapter {
-
-        public List<FloorModel> floorModelList;
-        private int resource;
-        private LayoutInflater inflater;
-
-        public FloorAdapter(Context context, int resource, List<FloorModel> objects) {
-            super(context, resource, objects);
-            floorModelList = objects;
-            this.resource = resource;
-            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflater.inflate(resource, null);
-                holder.tvId = (TextView) convertView.findViewById(R.id.tvId);
-                holder.tvFloorId = (TextView) convertView.findViewById(R.id.tvFloorId);
-                holder.tvFloorName = (TextView) convertView.findViewById(R.id.tvFloorName);
-                holder.tvCreated_at = (TextView) convertView.findViewById(R.id.tvCreated_at);
-                holder.tvUpdated_at = (TextView) convertView.findViewById(R.id.tvUpdated_at);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            holder.tvId.setText("Id : " + floorModelList.get(position).getId());
-            holder.tvFloorId.setText("Floor Id : " + floorModelList.get(position).getFloorId());
-            holder.tvFloorName.setText("Floor Name: " + floorModelList.get(position).getFloorName());
-            holder.tvCreated_at.setText("Created On: " + floorModelList.get(position).getCreated_at());
-            holder.tvUpdated_at.setText("Updated On: " + floorModelList.get(position).getUpdated_at());
-            return convertView;
-        }
-
-        class ViewHolder {
-            private TextView tvId;
-            private TextView tvFloorId;
-            private TextView tvFloorName;
-            private TextView tvCreated_at;
-            private TextView tvUpdated_at;
-
-        }
-    }
+//    public class FloorAdapter extends ArrayAdapter {
+//
+//        public List<FloorModel> floorModelList;
+//        private int resource;
+//        private LayoutInflater inflater;
+//
+//        public FloorAdapter(Context context, int resource, List<FloorModel> objects) {
+//            super(context, resource, objects);
+//            floorModelList = objects;
+//            this.resource = resource;
+//            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//
+//            ViewHolder holder = null;
+//
+//            if (convertView == null) {
+//                holder = new ViewHolder();
+//                convertView = inflater.inflate(resource, null);
+//                holder.tvId = (TextView) convertView.findViewById(R.id.tvId);
+//                holder.tvFloorId = (TextView) convertView.findViewById(R.id.tvFloorId);
+//                holder.tvFloorName = (TextView) convertView.findViewById(R.id.tvFloorName);
+//                holder.tvCreated_at = (TextView) convertView.findViewById(R.id.tvCreated_at);
+//                holder.tvUpdated_at = (TextView) convertView.findViewById(R.id.tvUpdated_at);
+//                convertView.setTag(holder);
+//            } else {
+//                holder = (ViewHolder) convertView.getTag();
+//            }
+//
+//            holder.tvId.setText("Id : " + floorModelList.get(position).getId());
+//            holder.tvFloorId.setText("Floor Id : " + floorModelList.get(position).getFloorId());
+//            holder.tvFloorName.setText("Floor Name: " + floorModelList.get(position).getFloorName());
+//            holder.tvCreated_at.setText("Created On: " + floorModelList.get(position).getCreated_at());
+//            holder.tvUpdated_at.setText("Updated On: " + floorModelList.get(position).getUpdated_at());
+//            return convertView;
+//        }
+//
+//        class ViewHolder {
+//            private TextView tvId;
+//            private TextView tvFloorId;
+//            private TextView tvFloorName;
+//            private TextView tvCreated_at;
+//            private TextView tvUpdated_at;
+//
+//        }
+//    }
 }

@@ -1,51 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="4dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:weightSum="1"
+    tools:context="online.klok.restapp.customAdapters.User">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Id"
-        android:id="@+id/tvId" />
+        android:text="Select Category" />
+
+    <Spinner
+        android:id="@+id/spinFood"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/tvCategoryId"
+        android:layout_width="129dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Category Id"
-        android:id="@+id/tvCategoryId" />
+        android:layout_weight="0.04"
+        android:text="categoryId" />
 
-    <TextView
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/bOk"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Name"
-        android:id="@+id/tvName" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Short Name"
-        android:id="@+id/tvShortName" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="created_at"
-        android:id="@+id/tvCreated_at" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="updated_at"
-        android:id="@+id/tvUpdated_at" />
+        android:layout_gravity="right"
+        android:text="Ok" />
 
 </LinearLayout>
