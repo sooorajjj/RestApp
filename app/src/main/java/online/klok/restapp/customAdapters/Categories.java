@@ -25,7 +25,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class Categories extends AppCompatActivity implements AdapterView.OnItemS
         okButton = (Button) findViewById(R.id.bOk);
         // spinner item select listener
         spinnerFood.setOnItemSelectedListener(this);
-        new JSONTask().execute("http://146.185.178.83/resttest/Categories");
+        new JSONTask().execute("http://146.185.178.83/resttest/categories");
     }
 
     private void populateSpinner() {
@@ -76,85 +75,15 @@ public class Categories extends AppCompatActivity implements AdapterView.OnItemS
         spinnerFood.setAdapter(spinnerAdapter);
     }
 
-    //    public class CategoriesAdapter extends ArrayAdapter {
-//
-//        public List<CategoriesModel> categoriesModelList;
-//        private int resource;
-//        private LayoutInflater inflater;
-//        public CategoriesAdapter(Context context, int resource, List<CategoriesModel> objects) {
-//            super(context, resource, objects);
-//            categoriesModelList = objects;
-//            this.resource = resource;
-//            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//
-//            ViewHolder holder = null;
-//
-//            if(convertView == null){
-//                holder = new ViewHolder();
-//                convertView=inflater.inflate(resource, null);
-//                holder.tvId = (TextView)convertView.findViewById(R.id.tvId);
-//                holder.tvCategoryId = (TextView)convertView.findViewById(R.id.tvCategoryId);
-//                holder.tvName = (TextView)convertView.findViewById(R.id.tvName);
-//                holder.tvShortName = (TextView)convertView.findViewById(R.id.tvShortName);
-//                holder.tvCreated_at = (TextView)convertView.findViewById(R.id.tvCreated_at);
-//                holder.tvUpdated_at = (TextView)convertView.findViewById(R.id.tvUpdated_at);
-//                convertView.setTag(holder);
-//            }else {
-//                holder = (ViewHolder) convertView.getTag();
-//            }
-//
-//            holder.tvId.setText("Id: " + categoriesModelList.get(position).getId());
-//            holder.tvCategoryId.setText("Category Id: " + categoriesModelList.get(position).getCategoryId());
-//            holder.tvName.setText("Name: " + categoriesModelList.get(position).getName());
-//            holder.tvShortName.setText("Short Name: " + categoriesModelList.get(position).getShortName());
-//            holder.tvCreated_at.setText("Created On: " + categoriesModelList.get(position).getCreated_at());
-//            holder.tvUpdated_at.setText("Updated On: " + categoriesModelList.get(position).getUpdated_at());
-//            return convertView;
-//        }
-//
-//        class ViewHolder{
-//            private TextView tvId;
-//            private TextView tvCategoryId;
-//            private TextView tvName;
-//            private TextView tvShortName;
-//            private TextView tvCreated_at;
-//            private TextView tvUpdated_at;
-//
-//        }
-//    }
-//public class myOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
-//
-//    Context mContext;
-//
-//    public myOnItemSelectedListener(Context context){
-//        this.mContext = context;
-//    }
-//
-//    public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
-//
-//        CategoriesModel categoriesModel = categoriesModelList.get(pos).toString();
-//
-//    }
-//
-//    @Override
-//    public void onNothingSelected(AdapterView<?> arg0) {
-//        //nothing here
-//    }
-//}
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         CategoriesModel categoriesModel = categoriesModelList.get(position);
         displayCategoriesInformation(categoriesModel);
+    }
 
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> arg0) {
-        }
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+    }
 
     private void displayCategoriesInformation(CategoriesModel categoriesModel) {
 
@@ -175,11 +104,8 @@ public class Categories extends AppCompatActivity implements AdapterView.OnItemS
                 Intent intent = new Intent(Categories.this, SubCategories.class);
                 intent.putExtra("parameter_name", categoryId);
                 startActivity(intent);
-
             }
         });
-
-
     }
 
     public class JSONTask extends AsyncTask<String, String, List<CategoriesModel>> {

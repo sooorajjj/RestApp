@@ -1,15 +1,15 @@
 package online.klok.restapp.customAdapters;
 
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -31,22 +31,86 @@ import java.util.List;
 import online.klok.restapp.R;
 import online.klok.restapp.models.SubcategoryModel;
 
-public class SubCategories extends AppCompatActivity {
+public class SubCategories extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private ListView lvUsers;
+    private Spinner spinnerFood;
+    private Button okButton;
     private ProgressDialog dialog;
+    private List<SubcategoryModel> subcategoryModelList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sub);
+        setContentView(R.layout.row_subcategory);
+
+        Intent intent = getIntent();
+        int categoryId = intent.getIntExtra("parameter_name", 1);
+
+//        TextView categoryId = (TextView) findViewById(R.id.tvRecivedId);
+//        categoryId.setText("recivedId" + categoryId);
         dialog = new ProgressDialog(this);
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
         dialog.setMessage("Loading, please wait.....");
 
-        lvUsers = (ListView) findViewById(R.id.lvUsers);
-        new JSONTask().execute("http://146.185.178.83/resttest/SubCategories");
+        spinnerFood = (Spinner) findViewById(R.id.spinFood);
+        okButton = (Button) findViewById(R.id.bOk);
+        // spinner item select listener
+        spinnerFood.setOnItemSelectedListener(this);
+
+        String url = "http://146.185.178.83/resttest/categories/" + categoryId  +"/subcategories/";
+        new JSONTask().execute(url);
+    }
+
+    private void populateSpinner() {
+        List<String> lables = new ArrayList<String>();
+
+        for (int i = 0; i < subcategoryModelList.size(); i++) {
+            lables.add(subcategoryModelList.get(i).getName());
+        }
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, lables);
+
+        // Drop down layout style - list view with radio button
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinnerFood.setAdapter(spinnerAdapter);
+    }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        SubcategoryModel subcategoryModel = subcategoryModelList.get(position);
+        displaySubcategoryInformation(subcategoryModel);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+    }
+
+    private void displaySubcategoryInformation(SubcategoryModel subcategoryModel) {
+
+
+        //get references to your views
+        TextView tvSubCategoryId = (TextView) findViewById(R.id.tvSubCategoryId);
+
+        final int subCategoryId = subcategoryModel.getId();
+
+
+        //set values from your subCategoryModel java object to textView
+        tvSubCategoryId.setText("Id :  " + subcategoryModel.getId());
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(SubCategories.this, Items.class);
+                intent.putExtra("parameter_name", subCategoryId);
+                startActivity(intent);
+            }
+        });
     }
 
     public class JSONTask extends AsyncTask<String, String, List<SubcategoryModel> > {
@@ -87,7 +151,6 @@ public class SubCategories extends AppCompatActivity {
 //                StringBuffer finalBufferData = new StringBuffer();
                 // for loop so it fetch all the json_object in the json_array
 
-                List<SubcategoryModel> subcategoryModelList = new ArrayList<>();
 
                 Gson gson = new Gson();
                 for (int i = 0; i < parentArray.length(); i++) {
@@ -121,59 +184,9 @@ public class SubCategories extends AppCompatActivity {
         protected void onPostExecute(List<SubcategoryModel> result) {
             super.onPostExecute(result);
             dialog.dismiss();
-            SubcategoryAdapter adapter = new SubcategoryAdapter(getApplicationContext(), R.layout.row_subcategory, result);
-            lvUsers.setAdapter(adapter);
+            populateSpinner();
 //            TODO need to set the data to the list
         }
     }
-    public class SubcategoryAdapter extends ArrayAdapter {
-
-        public List<SubcategoryModel> subcategoryModelList;
-        private int resource;
-        private LayoutInflater inflater;
-        public SubcategoryAdapter(Context context, int resource, List<SubcategoryModel> objects) {
-            super(context, resource, objects);
-            subcategoryModelList = objects;
-            this.resource = resource;
-            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-
-            if(convertView == null){
-                holder = new ViewHolder();
-                convertView=inflater.inflate(resource, null);
-                holder.tvId = (TextView)convertView.findViewById(R.id.tvId);
-                holder.tvCategoryId = (TextView)convertView.findViewById(R.id.tvCategoryId);
-                holder.tvName = (TextView)convertView.findViewById(R.id.tvName);
-                holder.tvShortName = (TextView)convertView.findViewById(R.id.tvShortName);
-                holder.tvCreated_at = (TextView)convertView.findViewById(R.id.tvCreated_at);
-                holder.tvUpdated_at = (TextView)convertView.findViewById(R.id.tvUpdated_at);
-                convertView.setTag(holder);
-            }else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            holder.tvId.setText("Id : " + subcategoryModelList.get(position).getId());
-            holder.tvCategoryId.setText("Category Id : " + subcategoryModelList.get(position).getCategoryId());
-            holder.tvName.setText("Name: "+ subcategoryModelList.get(position).getName());
-            holder.tvShortName.setText("Short Name: "+subcategoryModelList.get(position).getShortName());
-            holder.tvCreated_at.setText("Created On: "+ subcategoryModelList.get(position).getCreated_at());
-            holder.tvUpdated_at.setText("Updated On: "+subcategoryModelList.get(position).getUpdated_at());
-            return convertView;
-        }
-
-        class ViewHolder{
-            private TextView tvId;
-            private TextView tvCategoryId;
-            private TextView tvName;
-            private TextView tvShortName;
-            private TextView tvCreated_at;
-            private TextView tvUpdated_at;
-
-        }
-    }
+//
 }

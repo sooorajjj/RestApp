@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="10dp"
     android:weightSum="1"
-    tools:context="online.klok.restapp.customAdapters.User">
+    tools:context="online.klok.restapp.customAdapters.Categories">
 
     <TextView
         android:layout_width="fill_parent"
